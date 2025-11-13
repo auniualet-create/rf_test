@@ -1,0 +1,17 @@
+# Notion API
+notion-client==2.2.1
+
+# HTTP Requests
+requests==2.31.0
+
+# 環境変数管理
+python-dotenv==1.0.0
+
+# HTML生成・パース
+Jinja2==3.1.2
+
+# ログ
+colorama==0.4.6
+
+# Yahoo/楽天API用
+pyyaml==6.0.1
