@@ -1,0 +1,12 @@
+{
+  "notion-page-id-1": {
+    "yahoo": "yahoo-item-code-1",
+    "rakuten": "rakuten-item-code-1",
+    "use_browser_for_yahoo": false
+  },
+  "notion-page-id-2": {
+    "yahoo": "yahoo-item-code-2",
+    "rakuten": "rakuten-item-code-2",
+    "use_browser_for_yahoo": true
+  }
+}

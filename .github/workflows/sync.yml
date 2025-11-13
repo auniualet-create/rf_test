@@ -1,0 +1,70 @@
+name: Sync Products from Notion
+
+on:
+  schedule:
+    # 毎時0分に実行
+    - cron: '0 * * * *'
+  workflow_dispatch:  # 手動実行も可能
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          playwright install chromium
+      
+      - name: Set up environment variables
+        env:
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+          YAHOO_SELLER_ID: ${{ secrets.YAHOO_SELLER_ID }}
+          YAHOO_APPLICATION_ID: ${{ secrets.YAHOO_APPLICATION_ID }}
+          YAHOO_CLIENT_ID: ${{ secrets.YAHOO_CLIENT_ID }}
+          YAHOO_CLIENT_SECRET: ${{ secrets.YAHOO_CLIENT_SECRET }}
+          YAHOO_ACCESS_TOKEN: ${{ secrets.YAHOO_ACCESS_TOKEN }}
+          RAKUTEN_APPLICATION_ID: ${{ secrets.RAKUTEN_APPLICATION_ID }}
+          RAKUTEN_AFFILIATE_ID: ${{ secrets.RAKUTEN_AFFILIATE_ID }}
+          RAKUTEN_SECRET: ${{ secrets.RAKUTEN_SECRET }}
+          RAKUTEN_ACCESS_TOKEN: ${{ secrets.RAKUTEN_ACCESS_TOKEN }}
+          PRODUCT_MAPPING_FILE: product_mapping.json
+        run: |
+          echo "環境変数が設定されました"
+      
+      - name: Create product mapping file
+        run: |
+          echo '${{ secrets.PRODUCT_MAPPING_JSON }}' > product_mapping.json
+        env:
+          PRODUCT_MAPPING_JSON: ${{ secrets.PRODUCT_MAPPING_JSON }}
+      
+      - name: Run sync
+        env:
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+          YAHOO_SELLER_ID: ${{ secrets.YAHOO_SELLER_ID }}
+          YAHOO_APPLICATION_ID: ${{ secrets.YAHOO_APPLICATION_ID }}
+          YAHOO_CLIENT_ID: ${{ secrets.YAHOO_CLIENT_ID }}
+          YAHOO_CLIENT_SECRET: ${{ secrets.YAHOO_CLIENT_SECRET }}
+          YAHOO_ACCESS_TOKEN: ${{ secrets.YAHOO_ACCESS_TOKEN }}
+          RAKUTEN_APPLICATION_ID: ${{ secrets.RAKUTEN_APPLICATION_ID }}
+          RAKUTEN_AFFILIATE_ID: ${{ secrets.RAKUTEN_AFFILIATE_ID }}
+          RAKUTEN_SECRET: ${{ secrets.RAKUTEN_SECRET }}
+          RAKUTEN_ACCESS_TOKEN: ${{ secrets.RAKUTEN_ACCESS_TOKEN }}
+          PRODUCT_MAPPING_FILE: product_mapping.json
+        run: |
+          python src/scheduler.py
+      
+      - name: Upload logs
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: sync-logs
+          path: "*.log"
